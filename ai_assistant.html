@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}AI Assistant - SmartStudy AI{% endblock %}
+{% block content %}
+<h1>🤖 AI Study Assistant</h1>
+
+{% if not ai_enabled %}
+  <p class="empty-state">⚙️ Running in fallback mode (no OPENAI_API_KEY set). Set the environment variable to enable full AI answers — smart fallback advice still works below.</p>
+{% endif %}
+
+{% if weak_subjects %}
+<div class="card">
+  <h2>💡 Quick Recommendation</h2>
+  <p>Focus more on: <strong>{% for w in weak_subjects %}{{ w.subject.name }}{% if not loop.last %}, {% endif %}{% endfor %}</strong></p>
+</div>
+{% endif %}
+
+<div class="card">
+  <h2>Ask the Assistant</h2>
+  <form method="POST">
+    <textarea name="question" rows="3" placeholder="e.g. How should I prepare for my Physics exam next week?" required>{{ question or '' }}</textarea>
+    <button type="submit" class="btn btn-primary">Ask</button>
+  </form>
+
+  {% if reply %}
+    <div class="ai-reply">
+      <strong>SmartStudy AI:</strong>
+      <p>{{ reply }}</p>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

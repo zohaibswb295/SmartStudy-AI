@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Login - SmartStudy AI{% endblock %}
+{% block content %}
+<div class="auth-wrap">
+  <div class="auth-card">
+    <h1>📘 SmartStudy AI</h1>
+    <p class="subtitle">Login to your study dashboard</p>
+
+    <form method="POST">
+      <label>Email</label>
+      <input type="email" name="email" placeholder="you@example.com" required>
+
+      <label>Password</label>
+      <input type="password" name="password" placeholder="••••••••" required>
+
+      <button type="submit" class="btn btn-primary">Login</button>
+    </form>
+    <p class="auth-switch">New here? <a href="{{ url_for('signup') }}">Create an account</a></p>
+  </div>
+</div>
+{% endblock %}

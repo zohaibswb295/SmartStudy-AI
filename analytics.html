@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Analytics - SmartStudy AI{% endblock %}
+{% block content %}
+<h1>📊 Progress Analytics</h1>
+
+<div class="grid">
+  <div class="card stat-card">
+    <div class="stat-num">{{ overall_progress }}%</div>
+    <div class="stat-label">Overall Progress</div>
+    <div class="progress-bar"><div class="progress-fill" style="width:{{ overall_progress }}%"></div></div>
+  </div>
+  <div class="card stat-card">
+    <div class="stat-num">{{ done_tasks }}/{{ total_tasks }}</div>
+    <div class="stat-label">Tasks Completed</div>
+  </div>
+</div>
+
+<div class="card">
+  <h2>Subject-wise Breakdown (weakest first)</h2>
+  {% if weak_subjects %}
+    <table class="data-table">
+      <tr><th>Subject</th><th>Task Completion</th><th>Self Confidence</th><th>Score</th></tr>
+      {% for w in weak_subjects %}
+        <tr class="{{ 'weak-row' if loop.index <= 2 }}">
+          <td>{{ w.subject.name }}</td>
+          <td>{{ w.completion_rate }}%</td>
+          <td>{{ w.confidence }}/5</td>
+          <td>
+            <div class="progress-bar small"><div class="progress-fill" style="width:{{ w.score }}%"></div></div>
+            {{ w.score }}/100
+          </td>
+        </tr>
+      {% endfor %}
+    </table>
+    <p class="empty-state">Subjects highlighted in red are your current weak areas — visit the AI Assistant for a focused study plan.</p>
+  {% else %}
+    <p class="empty-state">Add subjects and tasks to see analytics.</p>
+  {% endif %}
+</div>
+{% endblock %}

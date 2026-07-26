@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% block title %}SmartStudy AI{% endblock %}</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+{% if session.get('user_id') %}
+<nav class="navbar">
+  <div class="nav-brand">📘 SmartStudy AI</div>
+  <div class="nav-links">
+    <a href="{{ url_for('dashboard') }}" class="{{ 'active' if request.endpoint=='dashboard' }}">Dashboard</a>
+    <a href="{{ url_for('planner') }}" class="{{ 'active' if request.endpoint=='planner' }}">Planner</a>
+    <a href="{{ url_for('subjects') }}" class="{{ 'active' if request.endpoint=='subjects' }}">Subjects</a>
+    <a href="{{ url_for('notes') }}" class="{{ 'active' if request.endpoint=='notes' }}">Notes</a>
+    <a href="{{ url_for('tasks') }}" class="{{ 'active' if request.endpoint=='tasks' }}">Tasks</a>
+    <a href="{{ url_for('analytics') }}" class="{{ 'active' if request.endpoint=='analytics' }}">Analytics</a>
+    <a href="{{ url_for('ai_assistant') }}" class="{{ 'active' if request.endpoint=='ai_assistant' }}">AI Assistant</a>
+    <a href="{{ url_for('logout') }}" class="logout-link">Logout</a>
+  </div>
+</nav>
+{% endif %}
+
+<main class="container">
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        <div class="flash flash-{{ category }}">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  {% block content %}{% endblock %}
+</main>
+
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}Notes - SmartStudy AI{% endblock %}
+{% block content %}
+<h1>📝 Notes / Learning Material</h1>
+
+<div class="card">
+  <h2>Add a Note</h2>
+  <form method="POST">
+    <label>Title</label>
+    <input type="text" name="title" placeholder="Note title" required>
+
+    <label>Subject (optional)</label>
+    <select name="subject_id">
+      <option value="">-- None --</option>
+      {% for s in subjects %}
+        <option value="{{ s.id }}">{{ s.name }}</option>
+      {% endfor %}
+    </select>
+
+    <label>Content</label>
+    <textarea name="content" rows="4" placeholder="Write your notes here..." required></textarea>
+
+    <button type="submit" class="btn btn-primary">Save Note</button>
+  </form>
+</div>
+
+<div class="grid grid-2">
+  {% for n in notes %}
+    <div class="card">
+      <h3>{{ n.title }}</h3>
+      {% if n.subject %}<span class="tag">{{ n.subject.name }}</span>{% endif %}
+      <p>{{ n.content }}</p>
+      <small>{{ n.created_at.strftime('%d %b %Y') }}</small>
+      <form method="POST" action="{{ url_for('delete_note', note_id=n.id) }}" class="inline-form">
+        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+      </form>
+    </div>
+  {% else %}
+    <p class="empty-state">No notes yet. Add your first one above.</p>
+  {% endfor %}
+</div>
+{% endblock %}

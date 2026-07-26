@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Tasks - SmartStudy AI{% endblock %}
+{% block content %}
+<h1>✅ Tasks & Goals</h1>
+
+<div class="card">
+  <h2>Add a Task or Goal</h2>
+  <form method="POST" class="inline-form-row">
+    <input type="text" name="title" placeholder="What needs to be done?" required>
+    <select name="subject_id">
+      <option value="">No subject</option>
+      {% for s in subjects %}
+        <option value="{{ s.id }}">{{ s.name }}</option>
+      {% endfor %}
+    </select>
+    <input type="date" name="due_date">
+    <label class="checkbox-label"><input type="checkbox" name="is_goal"> Mark as Goal</label>
+    <button type="submit" class="btn btn-primary">Add</button>
+  </form>
+</div>
+
+<div class="card">
+  <h2>Your List</h2>
+  {% if tasks %}
+    <ul class="simple-list">
+      {% for t in tasks %}
+        <li>
+          <form method="POST" action="{{ url_for('toggle_task', task_id=t.id) }}" class="inline-form">
+            <button type="submit" class="check-btn">{{ '✅' if t.is_done else '⬜' }}</button>
+          </form>
+          <span class="{{ 'done-text' if t.is_done }}">
+            {{ '🎯' if t.is_goal else '' }} {{ t.title }}
+            {% if t.subject %}<span class="tag">{{ t.subject.name }}</span>{% endif %}
+            {% if t.due_date %}<small> · due {{ t.due_date.strftime('%d %b') }}</small>{% endif %}
+          </span>
+          <form method="POST" action="{{ url_for('delete_task', task_id=t.id) }}" class="inline-form">
+            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+          </form>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p class="empty-state">No tasks yet.</p>
+  {% endif %}
+</div>
+{% endblock %}

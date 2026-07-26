@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block title %}Dashboard - SmartStudy AI{% endblock %}
+{% block content %}
+<h1>Hi, {{ user.name }} 👋</h1>
+<p class="quote">💡 "{{ quote }}"</p>
+
+<div class="grid">
+  <div class="card stat-card">
+    <div class="stat-num">{{ progress }}%</div>
+    <div class="stat-label">Overall Task Progress</div>
+    <div class="progress-bar"><div class="progress-fill" style="width:{{ progress }}%"></div></div>
+  </div>
+
+  <div class="card stat-card">
+    <div class="stat-num">{{ pending_tasks }}</div>
+    <div class="stat-label">Pending Tasks (of {{ total_tasks }})</div>
+  </div>
+
+  <div class="card stat-card">
+    <div class="stat-num">{{ plan_today|length }}</div>
+    <div class="stat-label">Study Slots Today</div>
+  </div>
+</div>
+
+<div class="grid grid-2">
+  <div class="card">
+    <h2>📅 Today's Plan</h2>
+    {% if plan_today %}
+      <ul class="simple-list">
+        {% for p in plan_today %}
+          <li>{{ p.start_time }} — {{ p.subject_name }} ({{ p.duration_minutes }} min) {% if p.is_done %}✅{% endif %}</li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p class="empty-state">No study slots planned yet. <a href="{{ url_for('planner') }}">Add one</a>.</p>
+    {% endif %}
+  </div>
+
+  <div class="card">
+    <h2>⚠️ Weak Subjects</h2>
+    {% if weak_subjects %}
+      <ul class="simple-list">
+        {% for w in weak_subjects %}
+          <li>{{ w.subject.name }} — score {{ w.score }}/100 (completion {{ w.completion_rate }}%)</li>
+        {% endfor %}
+      </ul>
+      <a href="{{ url_for('analytics') }}">View full analytics →</a>
+    {% else %}
+      <p class="empty-state">Add subjects & tasks to see weak-area insights.</p>
+    {% endif %}
+  </div>
+</div>
+
+<div class="card">
+  <h2>🎯 Today's Tasks</h2>
+  {% if tasks_today %}
+    <ul class="simple-list">
+      {% for t in tasks_today %}
+        <li>
+          <form method="POST" action="{{ url_for('toggle_task', task_id=t.id) }}" class="inline-form">
+            <button type="submit" class="check-btn">{{ '✅' if t.is_done else '⬜' }}</button>
+          </form>
+          <span class="{{ 'done-text' if t.is_done }}">{{ t.title }}</span>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p class="empty-state">No tasks due today. <a href="{{ url_for('tasks') }}">Add a task</a>.</p>
+  {% endif %}
+</div>
+{% endblock %}

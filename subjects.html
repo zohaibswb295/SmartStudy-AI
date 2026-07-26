@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Subjects - SmartStudy AI{% endblock %}
+{% block content %}
+<h1>📚 Subjects</h1>
+
+<div class="card">
+  <h2>Add a Subject</h2>
+  <form method="POST" class="inline-form-row">
+    <input type="text" name="name" placeholder="e.g. Mathematics" required>
+    <select name="confidence">
+      <option value="1">Confidence: Very Weak</option>
+      <option value="2">Confidence: Weak</option>
+      <option value="3" selected>Confidence: Average</option>
+      <option value="4">Confidence: Good</option>
+      <option value="5">Confidence: Strong</option>
+    </select>
+    <button type="submit" class="btn btn-primary">Add</button>
+  </form>
+</div>
+
+<div class="card">
+  <h2>Your Subjects</h2>
+  {% if subjects %}
+    <table class="data-table">
+      <tr><th>Subject</th><th>Confidence</th><th>Tasks</th><th></th></tr>
+      {% for s in subjects %}
+        <tr>
+          <td>{{ s.name }}</td>
+          <td>{{ s.confidence }}/5</td>
+          <td>{{ s.tasks|length }}</td>
+          <td>
+            <form method="POST" action="{{ url_for('delete_subject', subject_id=s.id) }}" class="inline-form">
+              <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+            </form>
+          </td>
+        </tr>
+      {% endfor %}
+    </table>
+  {% else %}
+    <p class="empty-state">No subjects added yet.</p>
+  {% endif %}
+</div>
+{% endblock %}
